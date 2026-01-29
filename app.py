@@ -22,7 +22,7 @@ app.config.from_object(Config())
 
 huey = MemoryHuey(immediate=False)
 
-# SHMU provides measurements every 15 minutes but data isn't updated on the dot.
+# SHMU provides measurements every 15 minutes but data isn't updated on the dot
 @huey.periodic_task(crontab(minute="*/10"))
 def scheduled_shmu_task() -> None:
     logger.info("Updating Dunaj values")
