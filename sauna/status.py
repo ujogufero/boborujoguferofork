@@ -4,7 +4,7 @@ from loguru import logger
 from huum.huum import Huum
 
 
-def fetch_sauna_status():
+def get_sauna_status():
     async def _fetch_status():
         username = os.environ.get("HUUM_USERNAME", "")
         password = os.environ.get("HUUM_PASSWORD", "")

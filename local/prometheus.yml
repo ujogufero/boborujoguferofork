@@ -2,7 +2,7 @@ global:
   scrape_interval: 30
 
 scrape_configs:
-  - job_name: 'bobor_status_local'
+  - job_name: 'sauna_status'
     static_configs:
       - targets: ['localhost:5000']
     metrics_path: '/metrics'

@@ -22,7 +22,7 @@ from prom.metrics import (
 
 from parsers.bobor import parse_bobor
 from parsers.shmu import parse_shmu
-from sauna.status import fetch_sauna_status
+from sauna.status import get_sauna_status
 from utils.scheduler import Scheduler
 
 # Global in-memory storage
@@ -74,7 +74,7 @@ def update_bobor_status() -> None:
 
 
 def update_sauna_status():
-    result = fetch_sauna_status()
+    result = get_sauna_status()
     if result:
         data_store["sauna_temperature"] = result.temperature
         data_store["sauna_door_closed"] = result.door_closed
@@ -117,7 +117,7 @@ if initial_bobor:
             )
     metric_bobor_last_updated.set_to_current_time()
 
-initial_sauna = fetch_sauna_status()
+initial_sauna = get_sauna_status()
 if initial_sauna:
     data_store["sauna_temperature"] = initial_sauna.temperature
     data_store["sauna_door_closed"] = initial_sauna.door_closed
@@ -128,7 +128,7 @@ if initial_sauna:
 
 @app.route("/api")
 @limiter.limit("100 per minute")
-def get_sauna_status() -> FlaskResponse | tuple[FlaskResponse, int]:
+def get_bobor_status() -> FlaskResponse | tuple[FlaskResponse, int]:
     return jsonify(data_store)
 
 
