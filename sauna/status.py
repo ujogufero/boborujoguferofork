@@ -19,5 +19,5 @@ def get_sauna_status():
     try:
         return asyncio.run(_fetch_status())
     except Exception as e:
-        logger.error(f"Error fetching sauna status: {e}")
+        logger.warning(f"Error fetching sauna status: {e}")
         return None
