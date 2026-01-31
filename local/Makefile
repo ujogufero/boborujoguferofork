@@ -18,7 +18,7 @@ stop: ## Stop VictoriaMetrics container
 browse: ## Open VictoriaMetrics in a browser
 	xdg-open "http://127.0.0.1:8428/vmui/#/dashboards"
 
-reload: ## Update systemd unit files
+reload: ## Reload systemd unit files
 	systemctl --user daemon-reload
 
 nuke: stop reload ## Remove everything
