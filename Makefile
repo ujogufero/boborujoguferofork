@@ -18,7 +18,7 @@ lock: ## poetry lock
 sync: ## poetry sync
 	$(POETRY) sync
 
-dev: ## poetry run flask run --host localhost --port 5000
+dev: ## poetry run flask run --host HOST --port PORT (default: 127.0.0.1:5000)
 	$(POETRY) run flask run --host $(HOST) --port $(PORT)
 
 shell: ## poetry run flask shell
@@ -27,7 +27,7 @@ shell: ## poetry run flask shell
 format: ## poetry run black .
 	$(POETRY) run black .
 
-serve: ## poetry run gunicorn -b 127.0.0.1:5000 app:app
+serve: ## poetry run gunicorn -b HOST:PORT app:app (default 127.0.0.1:5000)
 	$(POETRY) run gunicorn -b $(HOST):$(PORT) app:app
 
 routes: ## poetry run flask routes

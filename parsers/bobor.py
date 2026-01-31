@@ -47,7 +47,7 @@ def parse_bobor() -> str | None:
 
         if re.search(r"otvoren[eé]:?|Po[cč]et [lľ]ud[ií]:?", status_text, flags=re.IGNORECASE):
             status_text = re.sub(
-                r"otvoren[eé]:?|Počet ľudí:?", "", status_text, flags=re.IGNORECASE
+                r"otvoren[eé]:?|Po[cč]et [lľ]ud[ií]:?", "", status_text, flags=re.IGNORECASE
             ).strip()
         else:
             status_text = "closed"
