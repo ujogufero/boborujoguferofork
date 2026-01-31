@@ -45,12 +45,12 @@ def parse_bobor() -> str | None:
             if marquee_content:
                 status_text = marquee_content.get_text().strip()
 
-        if re.search(r"zatvoren[eé]", status_text, flags=re.IGNORECASE):
-            status_text = "closed"
-        else:
+        if re.search(r"otvoren[eé]:?|Po[cč]et [lľ]ud[ií]:?", status_text, flags=re.IGNORECASE):
             status_text = re.sub(
                 r"otvoren[eé]:?|Počet ľudí:?", "", status_text, flags=re.IGNORECASE
             ).strip()
+        else:
+            status_text = "closed"
 
         logger.debug("Bobor data parsed: {}", status_text)
         return status_text
