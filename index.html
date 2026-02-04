@@ -22,6 +22,7 @@
       transform: translateY(-50%);
       z-index: 50;
       width: 120px;
+      transition: opacity 0.3s;
     }
     .side-banner.left { left: 0; }
     .side-banner.right { right: 0; }
@@ -32,14 +33,14 @@
 <body class="bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors">
 
   <!-- --- LEFT BANNER --- -->
-  <div class="side-banner left">
+  <div class="side-banner left" id="leftBanner">
     <a href="https://www.floatplane.com/channel/TheTrashNetwork/home/frank" target="_blank">
       <img src="https://images.squarespace-cdn.com/content/v1/66a72afe45b59c00ef09bb29/d68b6166-54c2-4756-84ce-7f6bf7329e33/Untitled+Project-Animated+Image+%28Large%29.gif?format=1000w" alt="Left Banner">
     </a>
   </div>
 
   <!-- --- RIGHT BANNER --- -->
-  <div class="side-banner right">
+  <div class="side-banner right" id="rightBanner">
     <a href="https://www.floatplane.com/channel/TheTrashNetwork/home/frank" target="_blank">
       <img src="https://images.squarespace-cdn.com/content/v1/66a72afe45b59c00ef09bb29/d68b6166-54c2-4756-84ce-7f6bf7329e33/Untitled+Project-Animated+Image+%28Large%29.gif?format=1000w" alt="Right Banner">
     </a>
@@ -52,6 +53,7 @@
       <button onclick="setTheme('blue')" class="w-6 h-6 bg-blue-500 rounded-full"></button>
       <button onclick="setTheme('green')" class="w-6 h-6 bg-green-500 rounded-full"></button>
       <button onclick="setTheme('purple')" class="w-6 h-6 bg-purple-500 rounded-full"></button>
+      <button onclick="toggleBanners()" class="bg-white/20 px-3 py-1 rounded">Bannery</button>
     </div>
   </header>
 
@@ -72,23 +74,23 @@
     // --- DATA ---
     const data = {
       bobor_capacity: "4 z 15",
-      sauna_door_closed: true,
+      sauna_door_closed: true, // true = No jo, false = Ach jaj
       sauna_temperature: 84,
       water_last_measured: "20:00",
       water_level_cm: 279,
       water_temp_c: 1.8
     };
 
-    // --- GENERUJ KARTY ---
+    // --- GENERUJ KARTY S POZNÁMKAMI ---
     const dashboard = document.getElementById('dashboard');
 
     const cards = [
-      { label: "Bobor Kapacita", value: data.bobor_capacity },
-      { label: "Sauna Dvere Zatvorené", value: data.sauna_door_closed ? "✅" : "❌" },
-      { label: "Sauna Teplota", value: data.sauna_temperature + " °C", color: "text-red-500" },
-      { label: "Posledné Meranie Vody", value: data.water_last_measured },
-      { label: "Úroveň Vody (cm)", value: data.water_level_cm },
-      { label: "Teplota Vody (°C)", value: data.water_temp_c }
+      { label: "Bobor Kapacita", value: data.bobor_capacity, note: "obsadenosť" },
+      { label: "Sauna Dvere Zatvorené", value: data.sauna_door_closed ? "No jo" : "Ach jaj", note: "stav" },
+      { label: "Sauna Teplota", value: data.sauna_temperature + " °C", color: "text-red-500", note: "teplota" },
+      { label: "Posledné Meranie Vody", value: data.water_last_measured, note: "čas" },
+      { label: "Úroveň Vody (cm)", value: data.water_level_cm, note: "výška" },
+      { label: "Teplota Vody (°C)", value: data.water_temp_c, note: "studená" }
     ];
 
     cards.forEach(card => {
@@ -97,6 +99,7 @@
       div.innerHTML = `
         <p class="text-sm opacity-70">${card.label}</p>
         <p class="text-3xl font-bold ${card.color || ""}">${card.value}</p>
+        <p class="text-xs opacity-50 mt-1">${card.note || ""}</p>
       `;
       dashboard.appendChild(div);
     });
@@ -117,6 +120,20 @@
       localStorage.setItem('theme', color);
     }
 
+    // --- FUNKCIA SIDE BANNERS ---
+    function toggleBanners() {
+      const left = document.getElementById('leftBanner');
+      const right = document.getElementById('rightBanner');
+      if (left.style.display === 'none') {
+        left.style.display = 'block';
+        right.style.display = 'block';
+      } else {
+        left.style.display = 'none';
+        right.style.display = 'none';
+      }
+    }
+
+    // --- NAČÍTANIE PREVÁDZKY ---
     if (localStorage.getItem('dark') === 'true') {
       document.documentElement.classList.add('dark');
     }
@@ -130,23 +147,16 @@
       data: {
         labels: ['00h','04h','08h','12h','16h','20h'],
         datasets: [{
-          data: [68,70,71,73,72, data.water_level_cm], // posledná hodnota dynamicky
+          data: [68,70,71,73,72, data.water_level_cm],
           borderWidth: 2,
           tension: 0.4
         }]
       },
       options: {
         responsive: true,
-        animation: {
-          duration: 1500,
-          easing: 'easeOutQuart'
-        },
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          y: { beginAtZero: false }
-        }
+        animation: { duration: 1500, easing: 'easeOutQuart' },
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: false } }
       }
     });
   </script>
