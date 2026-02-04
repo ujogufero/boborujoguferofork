@@ -29,21 +29,8 @@
 
   <main class="p-6 max-w-5xl mx-auto space-y-6">
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow">
-        <p class="text-sm opacity-70">Water Level</p>
-        <p class="text-3xl font-bold">72 cm</p>
-      </div>
-
-      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow">
-        <p class="text-sm opacity-70">Water Temp</p>
-        <p class="text-3xl font-bold">18.4 °C</p>
-      </div>
-
-      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow">
-        <p class="text-sm opacity-70">Sauna Temp</p>
-        <p class="text-3xl font-bold text-red-500">85 °C</p>
-      </div>
+    <div id="dashboard" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Karty sa naplnia dynamicky cez JS -->
     </div>
 
     <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow">
@@ -54,6 +41,39 @@
   </main>
 
   <script>
+    // --- DATA ---
+    const data = {
+      bobor_capacity: "4 z 15",
+      sauna_door_closed: true,
+      sauna_temperature: 84,
+      water_last_measured: "20:00",
+      water_level_cm: 279,
+      water_temp_c: 1.8
+    };
+
+    // --- GENERUJ KARTY ---
+    const dashboard = document.getElementById('dashboard');
+
+    const cards = [
+      { label: "Bobor Kapacita", value: data.bobor_capacity },
+      { label: "Sauna Dvere Zatvorené", value: data.sauna_door_closed ? "✅" : "❌" },
+      { label: "Sauna Teplota", value: data.sauna_temperature + " °C", color: "text-red-500" },
+      { label: "Posledné Meranie Vody", value: data.water_last_measured },
+      { label: "Úroveň Vody (cm)", value: data.water_level_cm },
+      { label: "Teplota Vody (°C)", value: data.water_temp_c }
+    ];
+
+    cards.forEach(card => {
+      const div = document.createElement('div');
+      div.className = "bg-white dark:bg-slate-800 rounded-xl p-4 shadow";
+      div.innerHTML = `
+        <p class="text-sm opacity-70">${card.label}</p>
+        <p class="text-3xl font-bold ${card.color || ""}">${card.value}</p>
+      `;
+      dashboard.appendChild(div);
+    });
+
+    // --- FUNKCIE TMA / TÉMA ---
     function toggleDark() {
       document.documentElement.classList.toggle('dark');
       localStorage.setItem('dark', document.documentElement.classList.contains('dark'));
@@ -76,12 +96,13 @@
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) setTheme(savedTheme);
 
+    // --- CHART ---
     new Chart(document.getElementById('graf'), {
       type: 'line',
       data: {
         labels: ['00h','04h','08h','12h','16h','20h'],
         datasets: [{
-          data: [68,70,71,73,72,72],
+          data: [68,70,71,73,72, data.water_level_cm], // posledná hodnota dynamicky
           borderWidth: 2,
           tension: 0.4
         }]
@@ -96,9 +117,7 @@
           legend: { display: false }
         },
         scales: {
-          y: {
-            beginAtZero: false
-          }
+          y: { beginAtZero: false }
         }
       }
     });
