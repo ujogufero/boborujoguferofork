@@ -1,3 +1,5 @@
+Strasne uzasni fork
+
 # bobor_status
 Flask application that monitors [Danube](https://www.shmu.sk/sk/?page=765&station_id=5140) measurements and [Sauna Bobor](https://saunabobor.sk) metrics and provides endpoints for further processing.
 
