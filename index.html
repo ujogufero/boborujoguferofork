@@ -6,53 +6,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb'
+          }
+        }
+      }
+    }
+  </script>
 </head>
 
-<body class="bg-slate-100 text-slate-800">
+<body class="bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 transition-colors">
 
-  <header class="bg-blue-600 text-white px-6 py-4 shadow">
+  <header class="text-white px-6 py-4 shadow flex justify-between items-center" id="header">
     <h1 class="text-xl font-bold">🐿️ BoborUjo</h1>
-    <p class="text-sm opacity-80">Iba front-end dashboard</p>
+
+    <div class="flex gap-2">
+      <button onclick="toggleDark()" class="bg-white/20 px-3 py-1 rounded">🌙</button>
+      <button onclick="setTheme('blue')" class="w-6 h-6 bg-blue-500 rounded-full"></button>
+      <button onclick="setTheme('green')" class="w-6 h-6 bg-green-500 rounded-full"></button>
+      <button onclick="setTheme('purple')" class="w-6 h-6 bg-purple-500 rounded-full"></button>
+    </div>
   </header>
 
   <main class="p-6 max-w-5xl mx-auto space-y-6">
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white rounded-xl p-4 shadow">
-        <p class="text-gray-500 text-sm">Water Level</p>
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow">
+        <p class="text-sm opacity-70">Water Level</p>
         <p class="text-3xl font-bold">72 cm</p>
       </div>
 
-      <div class="bg-white rounded-xl p-4 shadow">
-        <p class="text-gray-500 text-sm">Water Temp</p>
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow">
+        <p class="text-sm opacity-70">Water Temp</p>
         <p class="text-3xl font-bold">18.4 °C</p>
       </div>
 
-      <div class="bg-white rounded-xl p-4 shadow">
-        <p class="text-gray-500 text-sm">Sauna Temp</p>
-        <p class="text-3xl font-bold text-red-600">85 °C</p>
+      <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow">
+        <p class="text-sm opacity-70">Sauna Temp</p>
+        <p class="text-3xl font-bold text-red-500">85 °C</p>
       </div>
     </div>
 
-    <!-- GRAF -->
-    <div class="bg-white rounded-xl p-6 shadow">
-      <h2 class="font-semibold mb-4">📈 Water Level (ukážka)</h2>
+    <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow">
+      <h2 class="font-semibold mb-4">📈 Water Level</h2>
       <canvas id="graf"></canvas>
     </div>
 
   </main>
 
   <script>
-    const ctx = document.getElementById("graf");
+    function toggleDark() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem(
+        'dark',
+        document.documentElement.classList.contains('dark')
+      );
+    }
 
-    new Chart(ctx, {
-      type: "line",
+    function setTheme(color) {
+      const colors = {
+        blue: '#2563eb',
+        green: '#16a34a',
+        purple: '#7c3aed'
+      };
+
+      document.getElementById('header').style.backgroundColor = colors[color];
+      localStorage.setItem('theme', color);
+    }
+
+    if (localStorage.getItem('dark') === 'true') {
+      document.documentElement.classList.add('dark');
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) setTheme(savedTheme);
+
+    new Chart(document.getElementById('graf'), {
+      type: 'line',
       data: {
-        labels: ["00h", "04h", "08h", "12h", "16h", "20h"],
+        labels: ['00h','04h','08h','12h','16h','20h'],
         datasets: [{
-          data: [68, 70, 71, 73, 72, 72],
+          data: [68,70,71,73,72,72],
           borderWidth: 2,
           tension: 0.3
         }]
