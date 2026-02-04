@@ -89,7 +89,7 @@
       { label: "Sauna Dvere Zatvorené", value: data.sauna_door_closed ? "No jo" : "Ach jaj", note: "stav" },
       { label: "Sauna Teplota", value: data.sauna_temperature + " °C", color: "text-red-500", note: "teplota" },
       { label: "Posledné Meranie Vody", value: data.water_last_measured, note: "čas" },
-      { label: "Úroveň Vody (cm)", value: data.water_level_cm, note: "výška" },
+      { label: "Water Level", value: data.water_level_cm, note: "výška" },
       { label: "Teplota Vody (°C)", value: data.water_temp_c, note: "studená" }
     ];
 
@@ -132,6 +132,16 @@
         right.style.display = 'none';
       }
     }
+
+    // --- VÝCHOZÍ STAV BANNEROV PODĽA ŠÍRKY OKNA ---
+    window.addEventListener('load', () => {
+      const left = document.getElementById('leftBanner');
+      const right = document.getElementById('rightBanner');
+      if (window.innerWidth < 768) { // mobile
+        left.style.display = 'none';
+        right.style.display = 'none';
+      }
+    });
 
     // --- NAČÍTANIE PREVÁDZKY ---
     if (localStorage.getItem('dark') === 'true') {
